@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edge_devices>
+	 <adhoc edgeValidation="false">
+		<costPerBw>0</costPerBw>
+		<costPerSec>0</costPerSec>
+		<costPerMem>0</costPerMem>
+		<costPerStorage>0</costPerStorage>
+		<location>
+			<x_pos>1</x_pos>
+			<y_pos>1</y_pos>
+			<wlan_id>0</wlan_id>
+			<attractiveness>0</attractiveness>
+		</location>
+		<hosts>
+		    <host>
+				<core>4</core>
+				<mips>2000</mips>
+				<ram>4000</ram>
+				<storage>10000</storage>
+				<os>android</os>
+				<version>13</version>
+				<adhocdeviceType>mobile</adhocdeviceType>
+					<VMs>
+					<VM vmm="Xen">
+						<core>2</core>
+						<mips>1000</mips>
+						<ram>2000</ram>
+						<storage>5000</storage>
+					</VM>
+					<VM vmm="Xen">
+						<core>2</core>
+						<mips>1000</mips>
+						<ram>2000</ram>
+						<storage>5000</storage>
+					</VM>
+				</VMs>
+			</host>
+		</hosts>
+	</adhoc>
+	
+	 
+    <adhoc edgeValidation="false">
+		<costPerBw>0</costPerBw>
+		<costPerSec>0</costPerSec>
+		<costPerMem>0</costPerMem>
+		<costPerStorage>0</costPerStorage>
+		<location>
+			<x_pos>1</x_pos>
+			<y_pos>1</y_pos>
+			<wlan_id>0</wlan_id>
+			<attractiveness>0</attractiveness>
+		</location>
+		<hosts>
+		    <host>
+				<core>4</core>
+				<mips>2000</mips>
+				<ram>4000</ram>
+				<storage>100000</storage>
+				<os>Ubuntu</os>
+				<version>20.10</version>
+				<adhocdeviceType>computer</adhocdeviceType>
+					<VMs>
+					<VM vmm="Xen">
+						<core>2</core>
+						<mips>1000</mips>
+						<ram>2000</ram>
+						<storage>50000</storage>
+					</VM>
+					<VM vmm="Xen">
+						<core>2</core>
+						<mips>1000</mips>
+						<ram>2000</ram>
+						<storage>50000</storage>
+					</VM>
+				</VMs>
+			</host>
+		</hosts>
+	</adhoc>
+	</edge_devices>
