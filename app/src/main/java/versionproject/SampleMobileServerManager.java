@@ -9,7 +9,7 @@
  * Copyright (c) 2017, Bogazici University, Istanbul, Turkey
  */
 
-package versionproject;
+package app.src.main.java.versionproject;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

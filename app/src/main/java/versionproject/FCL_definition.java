@@ -1,4 +1,4 @@
-package versionproject;
+package app.src.main.java.versionproject;
 
 public final class FCL_definition {
 	public final static String memberShipFunctions1 = String.join("\n"

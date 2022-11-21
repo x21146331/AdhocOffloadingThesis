@@ -10,7 +10,7 @@
  * Copyright (c) 2017, Bogazici University, Istanbul, Turkey
  */
 
-package versionproject;
+package app.src.main.java.versionproject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,7 +20,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -37,18 +36,16 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import net.sourceforge.jFuzzyLogic.FIS;
 import edu.boun.edgecloudsim.cloud_server.CloudVM;
 import edu.boun.edgecloudsim.core.SimManager;
 import edu.boun.edgecloudsim.core.SimSettings;
+import edu.boun.edgecloudsim.edge_client.CpuUtilizationModel_Custom;
+import edu.boun.edgecloudsim.edge_client.Task;
 import edu.boun.edgecloudsim.edge_orchestrator.EdgeOrchestrator;
 import edu.boun.edgecloudsim.edge_server.EdgeHost;
 import edu.boun.edgecloudsim.edge_server.EdgeVM;
-import edu.boun.edgecloudsim.edge_client.CpuUtilizationModel_Custom;
-import edu.boun.edgecloudsim.edge_client.Task;
-import edu.boun.edgecloudsim.edge_client.mobile_processing_unit.MobileHost;
-import edu.boun.edgecloudsim.edge_client.mobile_processing_unit.MobileVM;
 import edu.boun.edgecloudsim.utils.SimLogger;
+import net.sourceforge.jFuzzyLogic.FIS;
 
 public class FuzzyEdgeOrchestrator extends EdgeOrchestrator {
 	public static final double MAX_DATA_SIZE=2500;
@@ -183,6 +180,7 @@ public class FuzzyEdgeOrchestrator extends EdgeOrchestrator {
 			double bestRemoteEdgeUtilization = 100; //start with max value
 			
 			double isSecuredTask = SimSettings.getInstance().getTaskLookUpTable()[task.getTaskType()][14];
+			//System.out.println(isSecuredTask+"£££££££££££££££££"+SimSettings.getInstance().getTaskName(task.getTaskType())+"££££££££££££££££");
 			/*List<MobileVM> mobilevmArray = SimManager.getInstance().getMobileServerManager().getVmList(task.getMobileDeviceId());
 			
 			double requiredCapacity = ((CpuUtilizationModel_Custom)task.getUtilizationModelCpu()).predictUtilization(mobilevmArray.get(0).getVmType());

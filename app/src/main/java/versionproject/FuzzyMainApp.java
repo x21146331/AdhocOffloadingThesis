@@ -7,7 +7,7 @@
  * Copyright (c) 2017, Bogazici University, Istanbul, Turkey
  */
 
-package versionproject;
+package app.src.main.java.versionproject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -49,9 +49,9 @@ public class FuzzyMainApp {
 		}
 		else{
 			SimLogger.printLine("Simulation setting file, output folder and iteration number are not provided! Using default ones...");
-			configFile = "scripts/sample_app4/config/default_config.properties";
-			applicationsFile = "scripts/sample_app4/config/applications.xml";
-			edgeDevicesFile = "scripts/sample_app4/config/edge_devices.xml";
+			configFile = "scripts/version/config/default_config.properties";
+			applicationsFile = "scripts/version/config/applications.xml";
+			edgeDevicesFile = "scripts/version/config/edge_devices.xml";
 			outputFolder = "sim_results/ite" + iterationNumber;
 		}
 
