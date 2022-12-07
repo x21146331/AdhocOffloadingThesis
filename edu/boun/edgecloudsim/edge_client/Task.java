@@ -39,6 +39,9 @@ public class Task extends Cloudlet {
 		creationTime = CloudSim.clock();
 	}
 
+	public double getBandWidthCost() {
+		return super.accumulatedBwCost;
+	}
 	
 	public void setSubmittedLocation(Location _submittedLocation){
 		submittedLocation =_submittedLocation;

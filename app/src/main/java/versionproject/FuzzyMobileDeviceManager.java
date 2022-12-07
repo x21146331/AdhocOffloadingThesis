@@ -103,6 +103,8 @@ public class FuzzyMobileDeviceManager extends MobileDeviceManager {
 					networkModel.downloadStarted(task.getSubmittedLocation(), SimSettings.CLOUD_DATACENTER_ID);
 					SimLogger.getInstance().setDownloadDelay(task.getCloudletId(), WanDelay, NETWORK_DELAY_TYPES.WAN_DELAY);
 					schedule(getId(), WanDelay, RESPONSE_RECEIVED_BY_MOBILE_DEVICE, task);
+					SimLogger.getInstance().setCost(task.getCloudletId(),task.getBandWidthCost(),task.getProcessingCost());
+
 				}
 				else
 				{
@@ -133,6 +135,8 @@ public class FuzzyMobileDeviceManager extends MobileDeviceManager {
 				nextEvent = RESPONSE_RECEIVED_BY_EDGE_DEVICE_TO_RELAY_MOBILE_DEVICE;
 				nextDeviceForNetworkModel = SimSettings.GENERIC_EDGE_DEVICE_ID + 1;
 				delayType = NETWORK_DELAY_TYPES.MAN_DELAY;
+				SimLogger.getInstance().setCost(task.getCloudletId(),task.getBandWidthCost(),task.getProcessingCost());
+
 			}
 			
 			if(delay > 0)
@@ -144,6 +148,8 @@ public class FuzzyMobileDeviceManager extends MobileDeviceManager {
 					SimLogger.getInstance().setDownloadDelay(task.getCloudletId(), delay, delayType);
 					
 					schedule(getId(), delay, nextEvent, task);
+					SimLogger.getInstance().setCost(task.getCloudletId(),task.getBandWidthCost(),task.getProcessingCost());
+
 				}
 				else
 				{
@@ -155,6 +161,8 @@ public class FuzzyMobileDeviceManager extends MobileDeviceManager {
 				SimLogger.getInstance().failedDueToBandwidth(task.getCloudletId(), CloudSim.clock(), delayType);
 			}
 		}
+
+
 	}
 	
 	protected void processOtherEvent(SimEvent ev) {
@@ -284,6 +292,8 @@ public class FuzzyMobileDeviceManager extends MobileDeviceManager {
 		
 		//set location of the mobile device which generates this task
 		task.setSubmittedLocation(currentLocation);
+		
+		
 
 		//add related task to log list
 		SimLogger.getInstance().addLog(task.getMobileDeviceId(),
@@ -309,7 +319,7 @@ public class FuzzyMobileDeviceManager extends MobileDeviceManager {
 			delayType = NETWORK_DELAY_TYPES.WLAN_DELAY;
 			nextDeviceForNetworkModel = SimSettings.GENERIC_EDGE_DEVICE_ID;
 		}
-		
+		//System.out.println("delay:"+delay);
 		if(delay>0){
 			
 			Vm selectedVM = SimManager.getInstance().getEdgeOrchestrator().getVmToOffload(task, nextHopId);
@@ -352,6 +362,7 @@ public class FuzzyMobileDeviceManager extends MobileDeviceManager {
 			//SimLogger.printLine("Task #" + task.getCloudletId() + " cannot assign to any VM");
 			SimLogger.getInstance().rejectedDueToBandwidth(task.getCloudletId(), CloudSim.clock(), vmType, delayType);
 		}
+
 	}
 	
 	private void submitTaskToVm(Task task, SimSettings.VM_TYPES vmType) {

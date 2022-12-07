@@ -229,6 +229,8 @@ public class DefaultMobileDeviceManager extends MobileDeviceManager {
 			SimLogger.printLine("Unknown nextHopId! Terminating simulation...");
 			System.exit(1);
 		}
+		SimLogger.getInstance().setCost(task.getCloudletId(),task.getBandWidthCost(),task.getProcessingCost());
+
 	}
 	
 	private void submitTaskToVm(Task task, double delay, int datacenterId) {

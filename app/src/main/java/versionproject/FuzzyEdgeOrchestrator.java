@@ -54,7 +54,7 @@ public class FuzzyEdgeOrchestrator extends EdgeOrchestrator {
 	private FIS fis1 = null;
 	private FIS fis2 = null;
 	private FIS fis3 = null;
-	Map<String, BufferedReader> versionArray=new HashMap<String,BufferedReader>();
+	Map<String, JSONArray> versionArray=new HashMap<String,JSONArray>();
 
 	public FuzzyEdgeOrchestrator(String _policy, String _simScenario) {
 		super(_policy, _simScenario);
@@ -77,7 +77,7 @@ public class FuzzyEdgeOrchestrator extends EdgeOrchestrator {
 
     public boolean checkDeviceVersion(String deviceType,String deviceVersion,String ostype) {
         JSONParser parser = new JSONParser();
-        BufferedReader in;
+        BufferedReader in = null;
         URL releaseInfo;
         String latestOSVersion = null;
         Date date = new Date();
@@ -86,30 +86,35 @@ public class FuzzyEdgeOrchestrator extends EdgeOrchestrator {
 		try {
 			
 			releaseInfo = new URL("https://endoflife.date/api/"+ostype+".json");
-			if(versionArray.containsKey(ostype)){
-					in= versionArray.get(ostype);
-			}
-			else
-			{
+			if(!versionArray.containsKey(ostype)){
 			URLConnection yc = releaseInfo.openConnection();
 	        in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
-	        versionArray.put(ostype, in);
+	        
 			}
-	        String inputLine;  
-	        while ((inputLine = in.readLine()) != null) {  
-	     
-	        		JSONArray apiArr=(JSONArray) parser.parse(inputLine);
+	        String inputLine = null;  
+	        if ((in!=null&&(inputLine = in.readLine()) != null) ||versionArray.containsKey(ostype)) {  
+	        	JSONArray apiArr = null;
+	        	if(versionArray.containsKey(ostype))
+	        		apiArr=versionArray.get(ostype);
+	        	else {
+	        		 apiArr=(JSONArray) parser.parse(inputLine);
+	    	        versionArray.put(ostype, apiArr);
+	        	}
 	        		Date d=new Date();
 	        		for(Object obj:apiArr) {
 						JSONObject latestVersionObj=(JSONObject) obj;
 		        		if((deviceType.equals("mobile")&&(boolean) latestVersionObj.get("eol")==false) || (deviceType.equals("computer")&&d.before(df.parse(latestVersionObj.get("eol").toString())))) {
 		        			
 		        		if(latestVersionObj.containsKey("latest")) {
-		        			if(latestVersionObj.get("latest").equals(deviceVersion))
+		        			if(latestVersionObj.get("latest").equals(deviceVersion)) {
 		        				latestOSVersion=(String) latestVersionObj.get("latest");
+		        				break;
+		        			}
 		        		}
-		        		else if(latestVersionObj.get("cycle").equals(deviceVersion))
+		        		else if(latestVersionObj.get("cycle").equals(deviceVersion)) {
 		        			latestOSVersion=(String) latestVersionObj.get("cycle");
+		        			break;
+		        		}
 		        			
 		        		}
 	        		}
@@ -151,7 +156,6 @@ public class FuzzyEdgeOrchestrator extends EdgeOrchestrator {
 		
 		//RODO: return proper host IDa
 		
-		
 		if(simScenario.equals("SINGLE_TIER")){
 			result = SimSettings.GENERIC_EDGE_DEVICE_ID;
 		}
@@ -160,7 +164,7 @@ public class FuzzyEdgeOrchestrator extends EdgeOrchestrator {
 			int bestRemoteEdgeHostIndex = 0;
 			int nearestEdgeHostIndex = 0;
 			double nearestEdgeUtilization = 0;
-			int bestProcessingAdhoc=0;
+			Integer bestProcessingAdhoc = null;
 			double bestAdhocProcessingPower=0;
 			//List<Integer> securedAdhocHosts=new ArrayList<Integer>();
 			
@@ -193,19 +197,25 @@ public class FuzzyEdgeOrchestrator extends EdgeOrchestrator {
 			for(int hostIndex=0; hostIndex<numberOfHost; hostIndex++){
 				List<EdgeVM> vmArray = SimManager.getInstance().getEdgeServerManager().getVmList(hostIndex);
 				EdgeHost host = (EdgeHost)(vmArray.get(0).getHost()); //all VMs have the same host
-				if(isSecuredTask==1.0)
-					if(host.getAdhocVersion()!=null)
+				if(isSecuredTask==1.0) {
+				
+
+					if(host.getAdhocVersion()!=null) {
+						//System.out.println("Version"+host.getAdhocVersion());
+						//System.out.println("MBPS"+host.getAvailableMips());
 						if(!checkDeviceVersion(host.getAdhocDeviceType(),host.getAdhocVersion(),host.getAdhocOS()))
 							continue;
 						else {
-							if(host.getAvailableMips()>bestAdhocProcessingPower) {
+							if(Integer.valueOf((int) host.getAvailableMips())>bestAdhocProcessingPower) {
 								
 								bestAdhocProcessingPower=host.getAvailableMips();
 								bestProcessingAdhoc=hostIndex;
-								System.out.println("bestAdhocProcessingPower"+bestAdhocProcessingPower);
+								//System.out.println("bestAdhocProcessingPower"+bestAdhocProcessingPower);
 
 							}
 						}
+					}
+				}
 				double totalUtilization=0;
 				for(int vmIndex=0; vmIndex<vmArray.size(); vmIndex++){
 					totalUtilization += vmArray.get(vmIndex).getCloudletScheduler().getTotalUtilizationOfCpu(CloudSim.clock());
@@ -254,8 +264,12 @@ public class FuzzyEdgeOrchestrator extends EdgeOrchestrator {
 				
 				double delay_sensitivity = SimSettings.getInstance().getTaskLookUpTable()[task.getTaskType()][12];
 
+				//System.out.println("Best adhoc:"+bestProcessingAdhoc);
 		        // Set inputs
-				if(isSecuredTask==1.0&&task.getCloudletLength()<5000) {
+				if(bestProcessingAdhoc!=null&&task.getCloudletLength()<1000) {
+					//System.out.println("Task size:"+task.getCloudletLength());
+
+					SimLogger.getInstance().setAdhocAssigned(task.getCloudletId(), true);
 					return bestProcessingAdhoc;				
 				}else
 				{
